@@ -113,7 +113,7 @@ def update_values():
         snake.poses.pop(0)
 
     if snake.current_pos in snake.poses:
-        snake.poses = snake.poses[snake.poses.index(snake.current_pos):]
+        snake.poses = snake.poses[snake.poses.index(snake.current_pos)::2]
     mw.update()
 
 
@@ -121,6 +121,19 @@ if __name__ == '__main__':
     speed = 10
     apples = []
     snake = Snake()
+    timer_speed = 0
+    while True:
+        try:
+            timer_speed = int(input("Выберите уровень сложности:\n1. Очень сложно" +
+                                    "\n2. Сложно\n3. Средне\n4. Легко\n5. Очень легко\n")) * 8
+            if timer_speed < 0 or timer_speed > 50:
+                print('Введено неверное значение')
+                continue
+        except ValueError:
+            print('Введено неверное значение')
+        else:
+            break
+
     app = QApplication(sys.argv)
 
     mw = MyWindow()
@@ -129,14 +142,14 @@ if __name__ == '__main__':
 
     timer = QTimer()
     timer.timeout.connect(update_values)
-    timer.start(20)
+    timer.start(timer_speed)
 
     timer_apples = QTimer()
     timer_apples.timeout.connect(
-        lambda: apples.append((random.randint(0, 60) * 10,
-                               random.randint(0, 60) * 10
+        lambda: apples.append((random.randint(0, 60) * speed,
+                               random.randint(0, 60) * speed
                                )))
-    timer_apples.start(200)
+    timer_apples.start(timer_speed * 50)
 
     mw.show()
     sys.exit(app.exec_())
